@@ -6,8 +6,8 @@ namespace ProductsApi.Services
 {
     public interface IProductService
     {
-        public IEnumerable<Product> GetAll();
-        public Product GetById(Guid id);
+        public IEnumerable<ProductDto> GetAll();
+        public ProductDto GetById(Guid id);
         public Guid Create(CreateProductDto dto);
         public void Update(UpdateProductDto dto, Guid id);
         public void Delete(Guid id);
@@ -23,23 +23,26 @@ namespace ProductsApi.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<Product> GetAll()
+        public IEnumerable<ProductDto> GetAll()
         {
             var products = _context
                 .Products
                 .ToList();
 
-                return products;
+            var productsDtos = _mapper.Map<List<ProductDto>>(products);
+
+                return productsDtos;
         }
         
-        public Product GetById (Guid id)
+        public ProductDto GetById (Guid id)
         {
             var product = _context
                 .Products
                 .FirstOrDefault(p => p.Id == id);
 
-
-            return product;
+            var productDto = _mapper.Map<ProductDto>(product);
+            
+            return productDto;
         }
 
         public Guid Create(CreateProductDto dto)
