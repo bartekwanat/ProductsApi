@@ -6,10 +6,10 @@ using ProductsApi.Models;
 
 namespace ProductsApi.Services
 {
-    
+
     public class ProductService : IProductService
     {
-       
+
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
@@ -47,8 +47,8 @@ namespace ProductsApi.Services
         public async Task<Guid> Create(CreateProductDto dto)
         {
             var newProduct = _mapper.Map<Product>(dto);
-            _context.Products.AddAsync(newProduct);
-            _context.SaveChangesAsync();
+            await _context.Products.AddAsync(newProduct);
+            await _context.SaveChangesAsync();
 
             return newProduct.Id;
         }
@@ -64,8 +64,8 @@ namespace ProductsApi.Services
 
             product.Description = dto.Description;
             product.Quantity = dto.Quantity;
-            
-            _context.SaveChangesAsync();
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(Guid id)
@@ -77,8 +77,8 @@ namespace ProductsApi.Services
             if (product == null)
                 throw new NotFoundException("Product not found");
 
-           _context.Products.Remove(product);
-           await _context.SaveChangesAsync();
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
         }
     }
 }
