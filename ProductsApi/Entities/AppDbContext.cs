@@ -18,6 +18,10 @@ namespace ProductsApi.Entities
                 .Property(p => p.Description)
                 .HasMaxLength(200);
 
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasColumnType("decimal(18,2)");
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

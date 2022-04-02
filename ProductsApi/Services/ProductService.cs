@@ -1,19 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ProductsApi.Entities;
 using ProductsApi.Models;
 
 namespace ProductsApi.Services
 {
-    public interface IProductService
-    {
-        public IEnumerable<ProductDto> GetAll();
-        public ProductDto GetById(Guid id);
-        public Guid Create(CreateProductDto dto);
-        public void Update(UpdateProductDto dto, Guid id);
-        public void Delete(Guid id);
-    }
+    
     public class ProductService : IProductService
     {
+       
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
@@ -23,62 +18,57 @@ namespace ProductsApi.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<ProductDto> GetAll()
+        public async Task<IEnumerable<ProductDto>> GetAll()
         {
-            var products = _context
+            var products = await _context
                 .Products
-                .ToList();
+                .ToListAsync();
 
             var productsDtos = _mapper.Map<List<ProductDto>>(products);
 
-                return productsDtos;
+            return productsDtos;
         }
-        
-        public ProductDto GetById (Guid id)
+
+        public async Task<ProductDto> GetById(Guid id)
         {
-            var product = _context
+            var product = await _context
                 .Products
-                .FirstOrDefault(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             var productDto = _mapper.Map<ProductDto>(product);
-            
+
             return productDto;
         }
 
-        public Guid Create(CreateProductDto dto)
+        public async Task<Guid> Create(CreateProductDto dto)
         {
             var newProduct = _mapper.Map<Product>(dto);
-            _context.Products.Add(newProduct);
-            _context.SaveChanges();
+            _context.Products.AddAsync(newProduct);
+            _context.SaveChangesAsync();
 
-            return newProduct.Id;       
+            return newProduct.Id;
         }
 
-        public void Update (UpdateProductDto dto, Guid id)
+        public async Task Update(Guid id, UpdateProductDto dto)
         {
-            var product = _context
+            var product = await _context
                 .Products
-                .FirstOrDefault(p => p.Id == id);   
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             product.Description = dto.Description;
             product.Quantity = dto.Quantity;
-
-            _context.SaveChanges();
-        } 
-
-        public void Delete(Guid id)
-        {
-            var product = _context
-                .Products
-                .FirstOrDefault(p => p.Id == id);
-
-            _context.Products.Remove(product);
-            _context.SaveChanges();
+            
+            _context.SaveChangesAsync();
         }
-        
-        
 
+        public async Task Delete(Guid id)
+        {
+            var product = await _context
+                .Products
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-
+           _context.Products.Remove(product);
+           await _context.SaveChangesAsync();
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace ProductsApi.Models
 {
     public class CreateProductDto
     {
-        public Guid Id { get; set; }
+       
         [Required] public string Name { get; set; }
         public int Number { get; set; }
         public int Quantity { get; set; }

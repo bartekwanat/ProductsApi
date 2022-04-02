@@ -17,42 +17,42 @@ namespace ProductsApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ProductDto>> GetAll()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll()
         {
-            var productsDtos = _service.GetAll();
+            var productsDtos = await _service.GetAll();
 
             return Ok(productsDtos);
     
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ProductDto> GetById ([FromRoute] Guid id)
+        public async Task<ActionResult<ProductDto>> GetById ([FromRoute] Guid id)
         {
-            var productDto = _service.GetById(id);
+            var productDto = await _service.GetById(id);
             return Ok(productDto);
         }
 
         [HttpPost]
-        public Guid CreateProduct([FromBody] CreateProductDto dto)
+        public async Task<Guid> CreateProduct([FromBody] CreateProductDto dto)
         {
             if(!ModelState.IsValid)
             {
                 throw new Exception("Product with this Id not exist");
             }
 
-            var id = _service.Create(dto);
+            var id = await _service.Create(dto);
             return id;
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update([FromBody] UpdateProductDto dto, [FromRoute] Guid id)
+        public async Task<ActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProductDto dto)
         {
-            _service.Update(dto, id);
+           await _service.Update(id, dto);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete([FromRoute] Guid id)
+        public async Task<ActionResult> Delete([FromRoute] Guid id)
         {
             _service.Delete(id);
             return Ok();
