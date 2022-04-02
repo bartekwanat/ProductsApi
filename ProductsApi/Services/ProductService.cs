@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProductsApi.Entities;
+using ProductsApi.Exceptions;
 using ProductsApi.Models;
 
 namespace ProductsApi.Services
@@ -35,6 +36,9 @@ namespace ProductsApi.Services
                 .Products
                 .FirstOrDefaultAsync(p => p.Id == id);
 
+            if (product == null)
+                throw new NotFoundException("Product not found");
+
             var productDto = _mapper.Map<ProductDto>(product);
 
             return productDto;
@@ -55,6 +59,9 @@ namespace ProductsApi.Services
                 .Products
                 .FirstOrDefaultAsync(p => p.Id == id);
 
+            if (product == null)
+                throw new NotFoundException("Product not found");
+
             product.Description = dto.Description;
             product.Quantity = dto.Quantity;
             
@@ -66,6 +73,9 @@ namespace ProductsApi.Services
             var product = await _context
                 .Products
                 .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+                throw new NotFoundException("Product not found");
 
            _context.Products.Remove(product);
            await _context.SaveChangesAsync();
