@@ -9,7 +9,6 @@ namespace ProductsApi.Services
 
     public class ProductService : IProductService
     {
-
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
@@ -23,6 +22,7 @@ namespace ProductsApi.Services
         {
             var products = await _context
                 .Products
+                .AsNoTracking()
                 .ToListAsync();
 
             var productsDtos = _mapper.Map<List<ProductDto>>(products);
@@ -33,7 +33,8 @@ namespace ProductsApi.Services
         public async Task<ProductDto> GetById(Guid id)
         {
             var product = await _context
-                .Products                
+                .Products
+                .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null)
@@ -65,6 +66,7 @@ namespace ProductsApi.Services
             product.Description = dto.Description;
             product.Quantity = dto.Quantity;
 
+            _context.Update(product);
             await _context.SaveChangesAsync();
         }
 
