@@ -54,7 +54,7 @@ namespace ProductsApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete([FromRoute] Guid id)
         {
-            _service.Delete(id);
+            await _service.Delete(id);
             return Ok();
         }
     }

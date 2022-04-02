@@ -4,8 +4,10 @@ namespace ProductsApi.Entities
 {
     public class AppDbContext : DbContext
     {
-        private readonly string _connectionString =
-          "Server=(localdb)\\mssqllocaldb;Database=Products;Trusted_Connection=True;";
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+      
         public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,12 +23,6 @@ namespace ProductsApi.Entities
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)");
-
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString);
 
         }
     }

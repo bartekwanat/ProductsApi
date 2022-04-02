@@ -33,7 +33,7 @@ namespace ProductsApi.Services
         public async Task<ProductDto> GetById(Guid id)
         {
             var product = await _context
-                .Products
+                .Products                
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null)
@@ -47,7 +47,7 @@ namespace ProductsApi.Services
         public async Task<Guid> Create(CreateProductDto dto)
         {
             var newProduct = _mapper.Map<Product>(dto);
-            await _context.Products.AddAsync(newProduct);
+            _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
 
             return newProduct.Id;
