@@ -22,11 +22,11 @@ namespace ProductsApi.Controllers
             var productsDtos = await _service.GetAll();
 
             return Ok(productsDtos);
-    
+
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductDto>> GetById ([FromRoute] Guid id)
+        public async Task<ActionResult<ProductDto>> GetById([FromRoute] Guid id)
         {
             var productDto = await _service.GetById(id);
             return Ok(productDto);
@@ -35,20 +35,33 @@ namespace ProductsApi.Controllers
         [HttpPost]
         public async Task<Guid> CreateProduct([FromBody] CreateProductDto dto)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 throw new Exception("Product with this Id not exist");
             }
+            if (dto.Name == null || dto.Price == null)
+            {
+                throw new Exception("Name, and Price is required");
 
+            }
             var id = await _service.Create(dto);
             return id;
+
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProductDto dto)
         {
-           await _service.Update(id, dto);
+            if (dto.Name == null || dto.Price == null)
+            {
+                throw new Exception("Name and price are required");
+            }
+            if (ModelState.IsValid)
+            {
+                await _service.Update(id, dto);
+            }
             return Ok();
+
         }
 
         [HttpDelete("{id}")]

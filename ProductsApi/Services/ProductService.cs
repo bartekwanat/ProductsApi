@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProductsApi.Entities;
 using ProductsApi.Exceptions;
 using ProductsApi.Models;
+using System.Web.WebPages.Html;
 
 namespace ProductsApi.Services
 {
@@ -47,6 +48,7 @@ namespace ProductsApi.Services
 
         public async Task<Guid> Create(CreateProductDto dto)
         {
+
             var newProduct = _mapper.Map<Product>(dto);
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
