@@ -12,8 +12,8 @@ using ProductsApi.Entities;
 namespace ProductsApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220401181149_SecondMigration")]
-    partial class SecondMigration
+    [Migration("20220413194908_AddFluentValidation")]
+    partial class AddFluentValidation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,13 +32,11 @@ namespace ProductsApi.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Number")
                         .HasColumnType("int");

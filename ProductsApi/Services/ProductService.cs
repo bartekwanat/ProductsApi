@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProductsApi.Entities;
 using ProductsApi.Exceptions;
 using ProductsApi.Models;
+using ProductsApi.Models.Validators;
 
 namespace ProductsApi.Services
 {
@@ -47,6 +48,7 @@ namespace ProductsApi.Services
 
         public async Task<Guid> Create(CreateProductDto dto)
         {
+            
             var newProduct = _mapper.Map<Product>(dto);
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
@@ -56,13 +58,17 @@ namespace ProductsApi.Services
 
         public async Task Update(Guid id, UpdateProductDto dto)
         {
+            var validator = new UpdateProductValidator();
+            var result = validator.Validate(dto);
+
+
             var product = await _context
                 .Products
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null)
                 throw new NotFoundException("Product not found");
-
+            
             product.Description = dto.Description;
             product.Quantity = dto.Quantity;
 
